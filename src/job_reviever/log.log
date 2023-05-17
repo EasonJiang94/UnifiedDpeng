@@ -1,0 +1,9 @@
+s
+2023-05-17 15:34:05.337 | INFO     | __main__:<module>:70 - TESTING LjobReceiver
+2023-05-17 15:34:05.337 | INFO     | ljob_maker:shoot_ljob:130 - Start shooting ljob
+2023-05-17 15:34:05.337 | ERROR    | ljob_maker:shoot_ljob:133 - Image Loading failed
+TESTing
+2023-05-17 15:34:14.970 | INFO     | __main__:<module>:70 - TESTING LjobReceiver
+2023-05-17 15:34:14.970 | INFO     | ljob_maker:shoot_ljob:130 - Start shooting ljob
+2023-05-17 15:34:14.970 | ERROR    | ljob_maker:shoot_ljob:133 - Image Loading failed
+TESTing

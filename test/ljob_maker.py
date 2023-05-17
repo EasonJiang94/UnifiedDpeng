@@ -4,6 +4,7 @@ import cv2
 import os
 import shutil
 from multiprocessing import Process
+from loguru import logger
 import numpy as np
 model_type_dict = {
     0:"human",
@@ -125,6 +126,20 @@ def output_job(img, img_in_path, cnt, orig_img_path=None, wnp=True):
     os.rename(file_name, file_name[:-1])
     #os.remove(file_name[:-1])
 
+def shoot_ljob(img_path="../data/Kintetsu1.jpg", num=1):
+    img = cv2.imread(img_path)
+    if img is None:
+        logger.error("Image Loading failed")
+        return
+    p_list = []
+    for i in range(num):
+        p = Process(target=output_job, args=(img, img_in_path, i)).start()
+        p_list.append(p)
+    for p in p_list:
+        if p is None:
+            continue
+        p.join()
+    logger.info(f"{num} ljobs have been shot")
 
 if __name__ == '__main__':
     # clean_and_make_in_dir(ljob_in_path)
