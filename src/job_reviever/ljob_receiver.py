@@ -20,7 +20,6 @@ class LjobReceiver(Thread):
         logger.info("Watching dir : {self.ljob_dir}")
 
         eh = LjobEventHandler(self.ljob_dir, self.qout)
-
         notifier = pyinotify.Notifier(wm, eh)
         notifier.loop()
 
@@ -36,12 +35,13 @@ class LjobEventHandler(pyinotify.ProcessEvent):
         ljob_path = event.pathname
         if not ljob_path.endswith('.ljob'):
             logger.error(f"got a not-ljob file : {ljob_path}")
+            
         logger.debug(f"ljob_path = {ljob_path}")
         logger.debug(f"qin.qsize() = {self.qout.qsize()}")
         input_job = InputJob(ljob_path=ljob_path, \
                                 image=None, \
                                 sn=self.sn)
-        self.qout.put((self.sn, ljob_path))
+        self.qout.put(input_job)
         self.sn += 1
 
 
