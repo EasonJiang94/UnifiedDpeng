@@ -22,6 +22,14 @@ class LjobReceiver(Thread):
         eh = LjobEventHandler(self.ljob_dir, self.qout)
         notifier = pyinotify.Notifier(wm, eh)
         notifier.loop()
+    
+    @classmethod
+    def check_valid_ljob(cls, ljob_path):
+        if not ljob_path.endswith('.ljob'):
+            logger.error(f"got a not-ljob file : {ljob_path}")
+            assert ljob_path.endswith('.ljob') , "ljob_path should be endswith '.ljob'"
+            return False
+        return True
 
 
 
@@ -33,9 +41,8 @@ class LjobEventHandler(pyinotify.ProcessEvent):
         self.sn = 0
     def process_IN_MOVED_TO(self, event):
         ljob_path = event.pathname
-        if not ljob_path.endswith('.ljob'):
-            logger.error(f"got a not-ljob file : {ljob_path}")
-            
+        if not LjobReceiver.check_valid_ljob(ljob_path):
+            return
         logger.debug(f"ljob_path = {ljob_path}")
         logger.debug(f"qin.qsize() = {self.qout.qsize()}")
         input_job = InputJob(ljob_path=ljob_path, \
@@ -55,6 +62,6 @@ if __name__ == "__main__":
     qout = Queue(maxsize=10)
     ljob_receiver = LjobReceiver(ljob_dir, qout)
     ljob_receiver.start()
-    shoot_ljob(img_path="../../data/Kintetsu1.jpg", num=10)
+    shoot_ljob(img_path="../../data/Kintetsu1.jpg", num=1)
     ljob_receiver.join()
     
